@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 export function addEventListeners(camera, renderer, controls) {
     // Ensure moveState is defined on controls
     controls.moveState = {
@@ -6,6 +7,30 @@ export function addEventListeners(camera, renderer, controls) {
         left: false,
         right: false
     };
+
+    // Load walking sound
+    const audioLoader = new THREE.AudioLoader();
+    const listener = new THREE.AudioListener();
+    camera.add(listener);
+    const walkingSound = new THREE.Audio(listener);
+
+    audioLoader.load('assets/walking.mp3', function(buffer) {
+        walkingSound.setBuffer(buffer);
+        walkingSound.setLoop(true);
+        walkingSound.setVolume(0.5);
+    });
+
+    function playWalkingSound() {
+        if (!walkingSound.isPlaying) {
+            walkingSound.play();
+        }
+    }
+
+    function stopWalkingSound() {
+        if (walkingSound.isPlaying) {
+            walkingSound.stop();
+        }
+    }
 
     window.addEventListener('resize', function () {
         camera.aspect = window.innerWidth / window.innerHeight;
@@ -17,15 +42,19 @@ export function addEventListeners(camera, renderer, controls) {
         switch (event.key) {
             case 'w':
                 controls.moveState.forward = true;
+                playWalkingSound();
                 break;
             case 's':
                 controls.moveState.backward = true;
+                playWalkingSound();
                 break;
             case 'a':
                 controls.moveState.left = true;
+                playWalkingSound();
                 break;
             case 'd':
                 controls.moveState.right = true;
+                playWalkingSound();
                 break;
         }
     });
@@ -44,6 +73,11 @@ export function addEventListeners(camera, renderer, controls) {
             case 'd':
                 controls.moveState.right = false;
                 break;
+        }
+
+        // Stop walking sound if no movement keys are pressed
+        if (!controls.moveState.forward && !controls.moveState.backward && !controls.moveState.left && !controls.moveState.right) {
+            stopWalkingSound();
         }
     });
 }
