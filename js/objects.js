@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { vertexShader, fragmentShader } from '../shaders/sphereShader.js';
 
 export function addObjects(scene) {
     // Create a cube
@@ -8,9 +9,15 @@ export function addObjects(scene) {
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 
-    // Create a sphere
+    // Create a sphere with custom shaders
     const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
-    const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0x0000ff }); // Blue color
+    const sphereMaterial = new THREE.ShaderMaterial({
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+        uniforms: {
+            time: { value: 0.0 }
+        }
+    });
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     sphere.position.set(5, 1, 0); // Position the sphere to the right of the cube
     scene.add(sphere);
@@ -122,4 +129,11 @@ export function addObjects(scene) {
     rightPainting.position.set(9.9, 5, 0); // Slightly in front of the wall
     rightPainting.rotation.y = -Math.PI / 2;
     scene.add(rightPainting);
+}
+
+// Update the time uniform in the animation loop
+export function animate(renderer, scene, camera, sphereMaterial) {
+    requestAnimationFrame(() => animate(renderer, scene, camera, sphereMaterial));
+    sphereMaterial.uniforms.time.value += 0.05;
+    renderer.render(scene, camera);
 }
