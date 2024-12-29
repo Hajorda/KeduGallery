@@ -21,6 +21,13 @@ const material = new THREE.MeshStandardMaterial({ color: 0xff0000 }); // Red col
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
+// Create a sphere
+const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0x0000ff }); // Blue color
+const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+sphere.position.set(5, 1, 0); // Position the sphere to the right of the cube
+scene.add(sphere);
+
 // Set the camera position
 camera.position.set(0, 5, 10);
 
@@ -190,6 +197,13 @@ const animate = function () {
     if (moveState.backward) controls.moveForward(-moveSpeed);
     if (moveState.left) controls.moveRight(-moveSpeed);
     if (moveState.right) controls.moveRight(moveSpeed);
+
+    // Rotate the cube
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
+
+    // Animate the sphere (move up and down)
+    sphere.position.y = 1 + Math.sin(Date.now() * 0.001) * 2;
 
     controls.update();
     renderer.render(scene, camera);
