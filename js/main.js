@@ -1,7 +1,6 @@
 import { initScene, initRenderer, initCamera } from './scene.js';
 import { initControls } from './controls.js';
-import { addObjects } from './objects.js';
-import { animate } from './animations.js';
+import { addObjects, animate } from './objects.js';
 import { addEventListeners } from './events.js';
 import { setupPlayButton, hideMenu, showMenu, startExperience } from './menu.js';
 
@@ -14,13 +13,13 @@ const camera = initCamera();
 const controls = initControls(camera, renderer.domElement);
 
 // Add objects to the scene
-addObjects(scene);
+const { cube, sphere, sphereMaterial, auroraShaderMaterial } = addObjects(scene);
 
 // Add event listeners
 addEventListeners(camera, renderer, controls);
 
 // Start animation loop
-animate(scene, camera, renderer, controls);
+animate(renderer, scene, camera, controls, cube, sphere, sphereMaterial, auroraShaderMaterial);
 
 // Setup play button
 setupPlayButton(controls); // Pass controls to setupPlayButton
