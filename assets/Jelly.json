@@ -1,0 +1,108 @@
+{
+  "vertex": "precision highp float;\nprecision highp int;\nuniform float time;\nuniform float Wiggly_Improved1477532051339_181_speed;\nuniform float frequency;\nuniform float amplitude;\nvarying vec3 Tiling_Caustic1477531952046_152_vPosition;\nvarying vec3 Tiling_Caustic1477531952046_152_vNormal;\nvarying vec2 Tiling_Caustic1477531952046_152_vUv;\nvarying vec3 Noise_Ripples1477531959288_166_vPosition;\nvarying vec3 Noise_Ripples1477531959288_166_vNormal;\nvarying vec2 Noise_Ripples1477531959288_166_vUv;\nvoid main() {\n  Tiling_Caustic1477531952046_152_vPosition = (modelMatrix * vec4(position, 1.0)).xyz;\n  Tiling_Caustic1477531952046_152_vNormal = normalMatrix * normal;\n  Tiling_Caustic1477531952046_152_vUv = uv;\n  Noise_Ripples1477531959288_166_vPosition = (modelMatrix * vec4(position, 1.0)).xyz;\n  Noise_Ripples1477531959288_166_vNormal = normalMatrix * normal;\n  Noise_Ripples1477531959288_166_vUv = uv;\n  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n}",
+  "fragment": "#extension GL_OES_standard_derivatives : enable\nprecision highp float;\nprecision highp int;\nuniform vec2 Tiling_Caustic1477531952046_152_resolution;\nuniform vec3 backgroundColor;\nuniform vec3 Tiling_Caustic1477531952046_152_color;\nuniform float Tiling_Caustic1477531952046_152_speed;\nuniform float Tiling_Caustic1477531952046_152_brightness;\nuniform float time;\nuniform float contrast;\nuniform float distortion;\nuniform float Noise_Ripples1477531959288_166_speed;\nuniform vec3 Noise_Ripples1477531959288_166_color;\nuniform float Noise_Ripples1477531959288_166_brightness;\nuniform sampler2D noiseImage;\nuniform vec2 Noise_Ripples1477531959288_166_resolution;\nvarying vec3 Tiling_Caustic1477531952046_152_vPosition;\nvarying vec3 Tiling_Caustic1477531952046_152_vNormal;\nvarying vec2 Tiling_Caustic1477531952046_152_vUv;\nvarying vec3 Noise_Ripples1477531959288_166_vPosition;\nvarying vec3 Noise_Ripples1477531959288_166_vNormal;\nvarying vec2 Noise_Ripples1477531959288_166_vUv;\nvoid main() {\n  vec3 color = vec3(0.0);\n  vec2 uv = gl_FragCoord.xy / Tiling_Caustic1477531952046_152_resolution;\n  uv.y = 1.0 - uv.y;\n  vec2 p = uv * 8.0 - vec2(20.0);\n  vec2 i = p;\n  float c = 1.0;\n  float inten = .05;\n  for (int n = 0; n < 10; n++) {\n    float t = time * (1.0 - (3.0 / float(n+1)));\n    i = p + vec2(cos(t - i.x) + sin(t + i.y), sin(t - i.y) + cos(t + i.x));\n    c += 1.0/length(vec2(p.x / (sin(i.x+t)/inten),p.y / (cos(i.y+t)/inten)));\n  }\n  c /= float(10);\n  c = 1.5 - sqrt(c);\n  color = vec3(c * Tiling_Caustic1477531952046_152_color.r, c * Tiling_Caustic1477531952046_152_color.g, c * Tiling_Caustic1477531952046_152_color.b);\n  gl_FragColor = vec4(color, 1.0);\n}",
+  "uniforms": {
+    "Tiling_Caustic1477531952046_152_resolution": {
+      "value": {
+        "x": 1,
+        "y": 1
+      },
+      "type": "v2",
+      "glslType": "vec2"
+    },
+    "backgroundColor": {
+      "value": {
+        "r": "0",
+        "g": "0",
+        "b": "0"
+      },
+      "type": "c",
+      "glslType": "vec3"
+    },
+    "Tiling_Caustic1477531952046_152_color": {
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1
+      },
+      "type": "c",
+      "glslType": "vec3"
+    },
+    "Tiling_Caustic1477531952046_152_speed": {
+      "value": "1",
+      "type": "f",
+      "glslType": "float"
+    },
+    "Tiling_Caustic1477531952046_152_brightness": {
+      "value": "1.5",
+      "type": "f",
+      "glslType": "float"
+    },
+    "time": {
+      "value": "0",
+      "type": "f",
+      "glslType": "float"
+    },
+    "contrast": {
+      "value": "1.5",
+      "type": "f",
+      "glslType": "float"
+    },
+    "distortion": {
+      "value": "1",
+      "type": "f",
+      "glslType": "float"
+    },
+    "Noise_Ripples1477531959288_166_speed": {
+      "value": "0.1",
+      "type": "f",
+      "glslType": "float"
+    },
+    "Noise_Ripples1477531959288_166_color": {
+      "value": {
+        "r": 1,
+        "g": 0.2823529411764706,
+        "b": 0.4823529411764706
+      },
+      "type": "c",
+      "glslType": "vec3"
+    },
+    "Noise_Ripples1477531959288_166_brightness": {
+      "value": "0.1",
+      "type": "f",
+      "glslType": "float"
+    },
+    "Noise_Ripples1477531959288_166_resolution": {
+      "value": {
+        "x": "2",
+        "y": "2"
+      },
+      "type": "v2",
+      "glslType": "vec2"
+    },
+    "amplitude": {
+      "value": "2",
+      "type": "f",
+      "glslType": "float"
+    },
+    "frequency": {
+      "value": "2",
+      "type": "f",
+      "glslType": "float"
+    },
+    "highlightIntensity": {
+      "value": "0.4",
+      "type": "f",
+      "glslType": "float"
+    },
+    "highlightColor": {
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1
+      },
+      "type": "c",
+      "glslType": "vec3"
+    }
+  }
+}
