@@ -13,6 +13,10 @@ export function animate(scene, camera, renderer, controls) {
         if (controls.moveState.left) controls.moveRight(-moveSpeed);
         if (controls.moveState.right) controls.moveRight(moveSpeed);
 
+        // Update shader uniforms
+    sphereMaterial.uniforms.time.value += 0.05;
+    auroraShaderMaterial.uniforms.iTime.value += 0.01;
+
         // Rotate the cube
         if (cube) {
             cube.rotation.x += 0.01;
