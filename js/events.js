@@ -142,3 +142,11 @@ export function addEventListeners(camera, renderer, controls) {
         }
     });
 }
+
+// Add toggle info button functionality
+const toggleInfoButton = document.getElementById('toggle-info');
+const infoPanel = document.getElementById('info-panel');
+toggleInfoButton.addEventListener('click', () => {
+  infoPanel.classList.toggle('collapsed');
+  toggleInfoButton.textContent = infoPanel.classList.contains('collapsed') ? 'Show' : 'Hide';
+});
