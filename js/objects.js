@@ -11,6 +11,8 @@ export function addObjects(scene) {
   const geometry = new THREE.BoxGeometry();
   const material = new THREE.MeshStandardMaterial({ color: 0xff0000 }); // Red color
   const cube = new THREE.Mesh(geometry, material);
+  cube.castShadow = true; // Ensure the cube casts shadows
+  cube.receiveShadow = true; // Ensure the cube receives shadows
   cube.position.set(-10, 3, -5); // Position the cube at the origin
   scene.add(cube);
 
@@ -26,6 +28,8 @@ export function addObjects(scene) {
   const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
   sphere.position.set(0, 40, 0); // Position the sphere to the right of the cube
   sphere.scale.set(2, 2, 2); // Scale the sphere to be larger
+  sphere.castShadow = true; // Ensure the sphere casts shadows
+  sphere.receiveShadow = true; // Ensure the sphere receives shadows
   scene.add(sphere);
 
   // Create another sphere with shaders from shaders.js
@@ -40,6 +44,8 @@ export function addObjects(scene) {
   const sphere2 = new THREE.Mesh(sphereGeometry2, sphereMaterial2);
   sphere2.position.set(-10, 10, 10); // Position the sphere to the right of the cube
   sphere2.scale.set(2, 2, 2); // Scale the sphere to be larger
+  sphere2.castShadow = true; // Ensure the sphere casts shadows
+  sphere2.receiveShadow = true; // Ensure the sphere receives shadows
   scene.add(sphere2);
 
   // Load the grass texture
@@ -83,6 +89,8 @@ export function addObjects(scene) {
         wallTexturePath,
         { x: x * blockSize, y: y * blockSize, z: -31 }
       );
+      block.receiveShadow = true; // Ensure the wall receives shadows
+      block.castShadow = true; // Ensure the wall casts shadows
       scene.add(block);
     }
   }
@@ -97,6 +105,8 @@ export function addObjects(scene) {
         wallTexturePath,
         { x: x * blockSize, y: y * blockSize, z: 28 }
       );
+      block.receiveShadow = true; // Ensure the wall receives shadows
+      block.castShadow = true; // Ensure the wall casts shadows
       scene.add(block);
     }
   }
@@ -111,6 +121,8 @@ export function addObjects(scene) {
         wallTexturePath,
         { x: -31, y: y * blockSize, z: z * blockSize }
       );
+      block.receiveShadow = true; // Ensure the wall receives shadows
+      block.castShadow = true; // Ensure the wall casts shadows
       scene.add(block);
     }
   }
@@ -125,6 +137,8 @@ export function addObjects(scene) {
         wallTexturePath,
         { x: 30, y: y * blockSize, z: z * blockSize }
       );
+      block.receiveShadow = true; // Ensure the wall receives shadows
+      block.castShadow = true; // Ensure the wall casts shadows
       scene.add(block);
     }
   }
@@ -133,6 +147,7 @@ export function addObjects(scene) {
 const sunlight = new THREE.DirectionalLight(0xffffff, 1);
 sunlight.position.set(5, 10, 7.5);
 sunlight.castShadow = true; // Enable shadows
+sunlight.shadow.mapSize.width = 2048; // Shadow map width
 scene.add(sunlight);
 
 // Add ambient light to illuminate the scene
@@ -141,11 +156,13 @@ scene.add(ambientLight);
 
 // Add spotlights to the walls
 const spotLight1 = new THREE.SpotLight(0xfffff);
-spotLight1.position.set(0, 5, -3);
-spotLight1.target.position.set(0, 3, -8);
+spotLight1.position.set(0, 10, -7);
+spotLight1.target.position.set(0, 10, -8);
 spotLight1.angle = Math.PI / 6;
 spotLight1.penumbra = 0.5;
+spotLight1.intensity = 70;
 spotLight1.castShadow = true;
+spotLight1.shadow.mapSize.width = 2048; // Shadow map width
 scene.add(spotLight1);
 scene.add(spotLight1.target);
 
@@ -154,49 +171,56 @@ spotLight.position.set(0, 10, 0); // Position the spotlight above the center
 spotLight.target.position.set(0, 0, 0); // Target the center of the scene
 spotLight.angle = Math.PI / 4; // Wider angle for more coverage
 spotLight.penumbra = 0.5;
-spotLight.intensity = 5; // Increase intensity
+spotLight.intensity = 90; // Increase intensity
 spotLight.castShadow = true;
+spotLight.shadow.mapSize.width = 2048; // Shadow map width
 scene.add(spotLight);
 scene.add(spotLight.target);
 
-const spotLight2 = new THREE.SpotLight(0xffffff);
-spotLight2.position.set(0, 5, 3);
-spotLight2.target.position.set(0, 3, 8);
+const spotLight2 = new THREE.SpotLight(0xfffff);
+spotLight2.position.set(0, 10, 7);
+spotLight2.target.position.set(0, 10, 8);
 spotLight2.angle = Math.PI / 6;
 spotLight2.penumbra = 0.5;
+spotLight2.intensity = 40;
 spotLight2.castShadow = true;
+spotLight2.shadow.mapSize.width = 2048; // Shadow map width
 scene.add(spotLight2);
 scene.add(spotLight2.target);
 
-const spotLight3 = new THREE.SpotLight(0xffffff);
-spotLight3.position.set(-3, 5, 0);
-spotLight3.target.position.set(-8, 3, 0);
+const spotLight3 = new THREE.SpotLight(0xfffff);
+spotLight3.position.set(-7, 10, 0);
+spotLight3.target.position.set(-8, 10, 0);
 spotLight3.angle = Math.PI / 6;
 spotLight3.penumbra = 0.5;
+spotLight3.intensity = 40;
 spotLight3.castShadow = true;
+spotLight3.shadow.mapSize.width = 2048; // Shadow map width
 scene.add(spotLight3);
 scene.add(spotLight3.target);
 
-const spotLight4 = new THREE.SpotLight(0xffffff);
-spotLight4.position.set(3, 5, 0);
-spotLight4.target.position.set(8, 3, 0);
+const spotLight4 = new THREE.SpotLight(0xfffff);
+spotLight4.position.set(7, 10, 0);
+spotLight4.target.position.set(8, 10, 0);
 spotLight4.angle = Math.PI / 6;
 spotLight4.penumbra = 0.5;
+spotLight4.intensity = 40;
 spotLight4.castShadow = true;
+spotLight4.shadow.mapSize.width = 2048; // Shadow map width
 scene.add(spotLight4);
 scene.add(spotLight4.target);
 
-// Add a spotlight helper to visualize the spotlight
-const spotLightHelper = new THREE.SpotLightHelper(spotLight);
-scene.add(spotLightHelper);
-const spotLightHelper1 = new THREE.SpotLightHelper(spotLight1);
-scene.add(spotLightHelper1);
-const spotLightHelper2 = new THREE.SpotLightHelper(spotLight2);
-scene.add(spotLightHelper2);
-const spotLightHelper3 = new THREE.SpotLightHelper(spotLight3);
-scene.add(spotLightHelper3);
-const spotLightHelper4 = new THREE.SpotLightHelper(spotLight4);
-scene.add(spotLightHelper4);
+// // Add a spotlight helper to visualize the spotlight
+// const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+// scene.add(spotLightHelper);
+// const spotLightHelper1 = new THREE.SpotLightHelper(spotLight1);
+// scene.add(spotLightHelper1);
+// const spotLightHelper2 = new THREE.SpotLightHelper(spotLight2);
+// scene.add(spotLightHelper2);
+// const spotLightHelper3 = new THREE.SpotLightHelper(spotLight3);
+// scene.add(spotLightHelper3);
+// const spotLightHelper4 = new THREE.SpotLightHelper(spotLight4);
+// scene.add(spotLightHelper4);
 
 // // Ensure the renderer has shadows enabled
 // renderer.shadowMap.enabled = true;
@@ -211,6 +235,8 @@ scene.add(spotLightHelper4);
     (gltf) => {
       const model = gltf.scene;
       model.position.set(10, 0, 0); // Adjust the position as needed
+      model.castShadow = true; // Ensure the model casts shadows
+      model.receiveShadow = true; // Ensure the model receives
       scene.add(model);
     },
     undefined,
@@ -267,6 +293,8 @@ scene.add(spotLightHelper4);
       const sign = gltf.scene;
       sign.position.set(signX,signY,signZ); // Adjust the position as needed
       sign.scale.set(8, 8, 8); // Adjust the scale as needed
+      sign.receiveShadow = true; // Ensure the sign receives shadows
+      sign.castShadow = true; // Ensure the sign casts shadows
       scene.add(sign);
   
       // Load font and create text
@@ -300,6 +328,8 @@ scene.add(spotLightHelper4);
       const villager = gltf.scene;
       villager.position.set(-10, 4, -10); // Adjust the position as needed
       villager.scale.set(0.01, 0.01, 0.01); // Adjust the scale as needed
+      villager.castShadow = true; // Ensure the villager casts shadows
+      villager.receiveShadow = true; // Ensure the villager receives shadows
       scene.add(villager);
     },
     undefined,
@@ -315,6 +345,8 @@ scene.add(spotLightHelper4);
       const cat = gltf.scene;
       cat.position.set(5, 3, 10); // Adjust the position as needed
       cat.scale.set(6, 6, 6); // Adjust the scale as needed
+      cat.receiveShadow = true; // Ensure the cat receives shadows
+      cat.castShadow = true; // Ensure the cat casts shadows
       scene.add(cat);
     },
     undefined,
