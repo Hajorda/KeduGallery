@@ -5,6 +5,9 @@ This project is a school project for the CMPE360 Graphics class. It is an intera
  
 ![image](https://github.com/user-attachments/assets/6f0d1b7b-71ab-484b-acbc-6c0912ba7563)
 
+
+**Demo:** https://hajorda.github.io/KeduGallery/
+
 ## Project Structure
 
 ```
