@@ -1,13 +1,12 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { createBlock } from "./builder";
-import { add } from "three/src/nodes/TSL.js";
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
-
+import { vertexShader, fragmentShader } from '../shaders/sphereShader.js'; // Import shaders
 
 // Define the vertex and fragment shaders
-const vertexShader = `
+const vertexShader1 = `
     varying vec2 vUv;
     void main() {
         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
@@ -15,7 +14,7 @@ const vertexShader = `
     }
 `;
 
-const fragmentShader = `
+const fragmentShader1 = `
     uniform float iTime;
     uniform sampler2D iChannel0;
     uniform sampler2D iChannel1;
@@ -53,8 +52,8 @@ export function addObjects(scene) {
   // Create a sphere with custom shaders
   const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
   const sphereMaterial = new THREE.ShaderMaterial({
-    vertexShader: vertexShader,
-    fragmentShader: fragmentShader,
+    vertexShader: vertexShader1,
+    fragmentShader: fragmentShader1,
     uniforms: {
       time: { value: 0.0 },
     },
@@ -63,6 +62,21 @@ export function addObjects(scene) {
   sphere.position.set(0, 40, 0); // Position the sphere to the right of the cube
   sphere.scale.set(2, 2, 2); // Scale the sphere to be larger
   scene.add(sphere);
+
+  // Create another sphere with shaders from shaders.js
+  const sphereGeometry2 = new THREE.SphereGeometry(1, 32, 32);
+  const sphereMaterial2 = new THREE.ShaderMaterial({
+    vertexShader: vertexShader,
+    fragmentShader: fragmentShader,
+    uniforms: {
+      time: { value: 0.0 },
+    },
+  });
+  const sphere2 = new THREE.Mesh(sphereGeometry2, sphereMaterial2);
+  sphere2.position.set(-10, 10, 10); // Position the sphere to the right of the cube
+  sphere2.scale.set(2, 2, 2); // Scale the sphere to be larger
+  scene.add(sphere2);
+
 
   // Load the grass texture
   const textureLoader = new THREE.TextureLoader();
@@ -337,10 +351,10 @@ export function addObjects(scene) {
     wireframe: false,
   });
 
-  const planeGeometry = new THREE.PlaneGeometry(200, 100);
-  const plane = new THREE.Mesh(planeGeometry, auroraShaderMaterial);
-  plane.position.set(0, 50, -50); // Position the plane in the sky
-  scene.add(plane);
+  // const planeGeometry = new THREE.PlaneGeometry(200, 100);
+  // const plane = new THREE.Mesh(planeGeometry, auroraShaderMaterial);
+  // plane.position.set(0, 50, -50); // Position the plane in the sky
+  // scene.add(plane);
 
   return { cube, sphere, sphereMaterial, auroraShaderMaterial };
 }
