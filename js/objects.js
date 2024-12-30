@@ -224,3 +224,20 @@ export function animate(renderer, scene, camera, controls, cube, sphere, sphereM
     controls.update();
     renderer.render(scene, camera);
 }
+
+
+export function addHandImage(hudScene) {
+    const textureLoader = new THREE.TextureLoader();
+    const handTexture = textureLoader.load('img/hand.png', () => {
+        const aspect = handTexture.image.width / handTexture.image.height;
+        const handGeometry = new THREE.PlaneGeometry(1 * aspect, 1);
+        const handMaterial = new THREE.MeshBasicMaterial({ map: handTexture, transparent: true });
+        const handMesh = new THREE.Mesh(handGeometry, handMaterial);
+
+        // Position the hand in the right corner of the screen
+        handMesh.position.set(0.8, -0.8, 0); // Adjust these values as needed
+        handMesh.scale.set(0.2, 0.2, 0.2); // Adjust the scale as needed
+
+        hudScene.add(handMesh);
+    });
+}

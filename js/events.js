@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { setupAudio, startAudio } from "./music.js";
 export function addEventListeners(camera, renderer, controls) {
     // Ensure moveState is defined on controls
     controls.moveState = {
@@ -13,6 +14,9 @@ export function addEventListeners(camera, renderer, controls) {
     const listener = new THREE.AudioListener();
     camera.add(listener);
     const walkingSound = new THREE.Audio(listener);
+    
+    // Add event listener to start audio when the button is clicked
+    document.getElementById('start_audio').addEventListener('click', startAudio);
 
     audioLoader.load('assets/walking.mp3', function(buffer) {
         walkingSound.setBuffer(buffer);
