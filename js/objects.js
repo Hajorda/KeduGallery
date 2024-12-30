@@ -97,7 +97,7 @@ export function addObjects(scene) {
     const loader = new GLTFLoader();
     loader.load('assets/cat.glb', (gltf) => {
         const model = gltf.scene;
-        model.position.set(0, 0, 0); // Adjust the position as needed
+        model.position.set(10, 0, 0); // Adjust the position as needed
         scene.add(model);
     }, undefined, (error) => {
         console.error(error);
@@ -166,6 +166,16 @@ export function addObjects(scene) {
     rightPainting.rotation.y = -Math.PI / 2;
     scene.add(rightPainting);
 
+    const signLoader = new GLTFLoader();
+    signLoader.load('assets/minecraft_sign.glb', (gltf) => {
+        const sign = gltf.scene;
+        sign.position.set(0, -1, 0); // Adjust the position as needed
+        sign.scale.set(8, 8 ,8); // Adjust the scale as needed
+        scene.add(sign);
+    }, undefined, (error) => {
+        console.error(error);
+    });
+    
     // Add Aurora Borealis shader
     const auroraShaderMaterial = new THREE.ShaderMaterial({
         uniforms: {
