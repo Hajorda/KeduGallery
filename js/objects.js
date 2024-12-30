@@ -1,7 +1,7 @@
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { createBlock } from './builder';
-import { add } from 'three/src/nodes/TSL.js';
+import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { createBlock } from "./builder";
+import { add } from "three/src/nodes/TSL.js";
 
 // Define the vertex and fragment shaders
 const vertexShader = `
@@ -41,218 +41,296 @@ const fragmentShader = `
 `;
 
 export function addObjects(scene) {
-    // Create a cube
-    const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshStandardMaterial({ color: 0xff0000 }); // Red color
-    const cube = new THREE.Mesh(geometry, material);
-    scene.add(cube);
+  // Create a cube
+  const geometry = new THREE.BoxGeometry();
+  const material = new THREE.MeshStandardMaterial({ color: 0xff0000 }); // Red color
+  const cube = new THREE.Mesh(geometry, material);
+  scene.add(cube);
 
-    // Create a sphere with custom shaders
-    const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
-    const sphereMaterial = new THREE.ShaderMaterial({
-        vertexShader: vertexShader,
-        fragmentShader: fragmentShader,
-        uniforms: {
-            time: { value: 0.0 }
-        }
-    });
-    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    sphere.position.set(0, 40, 0); // Position the sphere to the right of the cube
-    sphere.scale.set(2, 2, 2); // Scale the sphere to be larger
-    scene.add(sphere);
+  // Create a sphere with custom shaders
+  const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+  const sphereMaterial = new THREE.ShaderMaterial({
+    vertexShader: vertexShader,
+    fragmentShader: fragmentShader,
+    uniforms: {
+      time: { value: 0.0 },
+    },
+  });
+  const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+  sphere.position.set(0, 40, 0); // Position the sphere to the right of the cube
+  sphere.scale.set(2, 2, 2); // Scale the sphere to be larger
+  scene.add(sphere);
 
-    // Load the grass texture
-    const textureLoader = new THREE.TextureLoader();
-    const grassTexture = textureLoader.load('textures/grass.jpg');
-    grassTexture.wrapS = THREE.RepeatWrapping;
-    grassTexture.wrapT = THREE.RepeatWrapping;
-    grassTexture.repeat.set(10, 10);
+  // Load the grass texture
+  const textureLoader = new THREE.TextureLoader();
+  const grassTexture = textureLoader.load("textures/grass.jpg");
+  grassTexture.wrapS = THREE.RepeatWrapping;
+  grassTexture.wrapT = THREE.RepeatWrapping;
+  grassTexture.repeat.set(10, 10);
 
-    // Remove the existing floor creation code
-    // const floorGeometry = new THREE.PlaneGeometry(500, 500);
-    // const floorMaterial = new THREE.MeshStandardMaterial({ map: grassTexture });
-    // const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    // floor.rotation.x = -Math.PI / 2; // Rotate the floor to be horizontal
-    // floor.position.y = -1; // Position the floor below the cube
-    // scene.add(floor);
+  // Remove the existing floor creation code
+  // const floorGeometry = new THREE.PlaneGeometry(500, 500);
+  // const floorMaterial = new THREE.MeshStandardMaterial({ map: grassTexture });
+  // const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+  // floor.rotation.x = -Math.PI / 2; // Rotate the floor to be horizontal
+  // floor.position.y = -1; // Position the floor below the cube
+  // scene.add(floor);
 
-    // Create the floor using blocks
-    const blockSize = 3;
-    const floorSize = 50; // 50x50 blocks
-    const texturePath = './textures/grass.jpg';
+  // Create the floor using blocks
+  const blockSize = 3;
+  const floorSize = 50; // 50x50 blocks
+  const texturePath = "./textures/grass.jpg";
 
-    for (let x = -floorSize / 2; x < floorSize / 2; x++) {
-        for (let z = -floorSize / 2; z < floorSize / 2; z++) {
-            const block = createBlock(blockSize, blockSize, blockSize, texturePath, { x: x * blockSize, y: -blockSize / 2, z: z * blockSize });
-            scene.add(block);
-        }
+  for (let x = -floorSize / 2; x < floorSize / 2; x++) {
+    for (let z = -floorSize / 2; z < floorSize / 2; z++) {
+      const block = createBlock(blockSize, blockSize, blockSize, texturePath, {
+        x: x * blockSize,
+        y: -blockSize / 2,
+        z: z * blockSize,
+      });
+      scene.add(block);
     }
+  }
 
-    // Wall texture
-    const wallTexturePath = './textures/wood_plank.jpeg';
+  // Wall texture
+  const wallTexturePath = "./textures/wood_plank.jpeg";
 
-    // Create walls using blocks
-    const wallHeight = 10; // 10 blocks high
-    const wallWidth = 20; // 20 blocks wide
+  // Create walls using blocks
+  const wallHeight = 10; // 10 blocks high
+  const wallWidth = 20; // 20 blocks wide
 
-    // Front wall
-    for (let x = -wallWidth / 2; x < wallWidth / 2; x++) {
-        for (let y = 0; y < wallHeight; y++) {
-            const block = createBlock(blockSize, blockSize, blockSize, wallTexturePath, { x: x * blockSize, y: y * blockSize, z: -31 });
-            scene.add(block);
-        }
+  // Front wall
+  for (let x = -wallWidth / 2; x < wallWidth / 2; x++) {
+    for (let y = 0; y < wallHeight; y++) {
+      const block = createBlock(
+        blockSize,
+        blockSize,
+        blockSize,
+        wallTexturePath,
+        { x: x * blockSize, y: y * blockSize, z: -31 }
+      );
+      scene.add(block);
     }
+  }
 
-    // Back wall
-    for (let x = -wallWidth / 2; x < wallWidth / 2; x++) {
-        for (let y = 0; y < wallHeight; y++) {
-            const block = createBlock(blockSize, blockSize, blockSize, wallTexturePath, { x: x * blockSize, y: y * blockSize, z: 28 });
-            scene.add(block);
-        }
+  // Back wall
+  for (let x = -wallWidth / 2; x < wallWidth / 2; x++) {
+    for (let y = 0; y < wallHeight; y++) {
+      const block = createBlock(
+        blockSize,
+        blockSize,
+        blockSize,
+        wallTexturePath,
+        { x: x * blockSize, y: y * blockSize, z: 28 }
+      );
+      scene.add(block);
     }
+  }
 
-    // Left wall
-    for (let z = -wallWidth / 2; z < wallWidth / 2; z++) {
-        for (let y = 0; y < wallHeight; y++) {
-            const block = createBlock(blockSize, blockSize, blockSize, wallTexturePath, { x: -31, y: y * blockSize, z: z * blockSize });
-            scene.add(block);
-        }
+  // Left wall
+  for (let z = -wallWidth / 2; z < wallWidth / 2; z++) {
+    for (let y = 0; y < wallHeight; y++) {
+      const block = createBlock(
+        blockSize,
+        blockSize,
+        blockSize,
+        wallTexturePath,
+        { x: -31, y: y * blockSize, z: z * blockSize }
+      );
+      scene.add(block);
     }
+  }
 
-    // Right wall
-    for (let z = -wallWidth / 2; z < wallWidth / 2; z++) {
-        for (let y = 0; y < wallHeight; y++) {
-            const block = createBlock(blockSize, blockSize, blockSize, wallTexturePath, { x: 30, y: y * blockSize, z: z * blockSize });
-            scene.add(block);
-        }
+  // Right wall
+  for (let z = -wallWidth / 2; z < wallWidth / 2; z++) {
+    for (let y = 0; y < wallHeight; y++) {
+      const block = createBlock(
+        blockSize,
+        blockSize,
+        blockSize,
+        wallTexturePath,
+        { x: 30, y: y * blockSize, z: z * blockSize }
+      );
+      scene.add(block);
     }
+  }
 
-    // Add a directional light to simulate sunlight
-    const sunlight = new THREE.DirectionalLight(0xffffff, 1);
-    sunlight.position.set(5, 10, 7.5);
-    sunlight.castShadow = true; // Enable shadows
-    scene.add(sunlight);
+  // Add a directional light to simulate sunlight
+  const sunlight = new THREE.DirectionalLight(0xffffff, 1);
+  sunlight.position.set(5, 10, 7.5);
+  sunlight.castShadow = true; // Enable shadows
+  scene.add(sunlight);
 
-    // Add ambient light to illuminate the scene
-    const ambientLight = new THREE.AmbientLight(0x404040); // Soft white light
-    scene.add(ambientLight);
+  // Add ambient light to illuminate the scene
+  const ambientLight = new THREE.AmbientLight(0x404040); // Soft white light
+  scene.add(ambientLight);
 
-    // Load the 3D model
-    const loader = new GLTFLoader();
-    loader.load('assets/cat.glb', (gltf) => {
-        const model = gltf.scene;
-        model.position.set(10, 0, 0); // Adjust the position as needed
-        scene.add(model);
-    }, undefined, (error) => {
-        console.error(error);
-    });
+  // Load the 3D model
+  const loader = new GLTFLoader();
+  loader.load(
+    "assets/cat.glb",
+    (gltf) => {
+      const model = gltf.scene;
+      model.position.set(10, 0, 0); // Adjust the position as needed
+      scene.add(model);
+    },
+    undefined,
+    (error) => {
+      console.error(error);
+    }
+  );
 
-    // Load the painting texture
-    const paintingTexture = textureLoader.load('img/catLogo.png');
+  // Load the painting texture
+  const paintingTexture = textureLoader.load("img/catLogo.png");
 
-    // Create paintings
-    const paintingMaterial = new THREE.MeshStandardMaterial({ map: paintingTexture });
+  // Create paintings
+  const paintingMaterial = new THREE.MeshStandardMaterial({
+    map: paintingTexture,
+  });
 
-    // Front wall painting
-    const frontPaintingGeometry = new THREE.PlaneGeometry(5, 5);
-    const frontPainting = new THREE.Mesh(frontPaintingGeometry, paintingMaterial);
-    frontPainting.position.set(0, 5, -29.9); // Slightly in front of the wall
-    scene.add(frontPainting);
+  // Front wall painting
+  const frontPaintingGeometry = new THREE.PlaneGeometry(5, 5);
+  const frontPainting = new THREE.Mesh(frontPaintingGeometry, paintingMaterial);
+  frontPainting.position.set(0, 5, -29.9); // Slightly in front of the wall
+  scene.add(frontPainting);
 
-    // Back wall painting
-    const backPaintingGeometry = new THREE.PlaneGeometry(5, 5);
-    const backPainting = new THREE.Mesh(backPaintingGeometry, paintingMaterial);
-    backPainting.position.set(0, 5, 9.9); // Slightly in front of the wall
-    backPainting.rotation.y = Math.PI;
-    scene.add(backPainting);
+  // Back wall painting
+  const backPaintingGeometry = new THREE.PlaneGeometry(5, 5);
+  const backPainting = new THREE.Mesh(backPaintingGeometry, paintingMaterial);
+  backPainting.position.set(0, 5, 9.9); // Slightly in front of the wall
+  backPainting.rotation.y = Math.PI;
+  scene.add(backPainting);
 
-    // Left wall painting
-    const leftPaintingGeometry = new THREE.PlaneGeometry(5, 5);
-    const leftPainting = new THREE.Mesh(leftPaintingGeometry, paintingMaterial);
-    leftPainting.position.set(-9.9, 5, 0); // Slightly in front of the wall
-    leftPainting.rotation.y = Math.PI / 2;
-    scene.add(leftPainting);
+  // Left wall painting
+  const leftPaintingGeometry = new THREE.PlaneGeometry(5, 5);
+  const leftPainting = new THREE.Mesh(leftPaintingGeometry, paintingMaterial);
+  leftPainting.position.set(-9.9, 5, 0); // Slightly in front of the wall
+  leftPainting.rotation.y = Math.PI / 2;
+  scene.add(leftPainting);
 
-    // Right wall painting
-    const rightPaintingGeometry = new THREE.PlaneGeometry(5, 5);
-    const rightPainting = new THREE.Mesh(rightPaintingGeometry, paintingMaterial);
-    rightPainting.position.set(9.9, 5, 0); // Slightly in front of the wall
-    rightPainting.rotation.y = -Math.PI / 2;
-    scene.add(rightPainting);
+  // Right wall painting
+  const rightPaintingGeometry = new THREE.PlaneGeometry(5, 5);
+  const rightPainting = new THREE.Mesh(rightPaintingGeometry, paintingMaterial);
+  rightPainting.position.set(9.9, 5, 0); // Slightly in front of the wall
+  rightPainting.rotation.y = -Math.PI / 2;
+  scene.add(rightPainting);
 
-    const signLoader = new GLTFLoader();
-    signLoader.load('assets/minecraft_sign.glb', (gltf) => {
-        const sign = gltf.scene;
-        sign.position.set(0, -1, 0); // Adjust the position as needed
-        sign.scale.set(8, 8 ,8); // Adjust the scale as needed
-        scene.add(sign);
-    }, undefined, (error) => {
-        console.error(error);
-    });
+  const signLoader = new GLTFLoader();
+  const gltfPath = "assets/minecraft_sign.glb";
 
-    // Add Aurora Borealis shader
-    const auroraShaderMaterial = new THREE.ShaderMaterial({
-        uniforms: {
-            iTime: { value: 0 },
-            iChannel0: { value: textureLoader.load("https://i.imgur.com/cUHldcm.png") },
-            iChannel1: { value: textureLoader.load("https://i.imgur.com/JNF8Bqf.jpg") }
-        },
-        vertexShader: vertexShader,
-        fragmentShader: fragmentShader,
-        wireframe: false
-    });
+  signLoader.load(
+    gltfPath,
+    function (gltf) {
+      const sign = gltf.scene;
+      sign.position.set(0, -1, 0); // Adjust the position as needed
+      sign.scale.set(8, 8, 8); // Adjust the scale as needed
+      scene.add(sign);
+      animate();
+    },
+    undefined,
+    function (error) {
+      console.error("An error happened", error);
+    }
+  );
 
-    const planeGeometry = new THREE.PlaneGeometry(200, 100);
-    const plane = new THREE.Mesh(planeGeometry, auroraShaderMaterial);
-    plane.position.set(0, 50, -50); // Position the plane in the sky
-    scene.add(plane);
+  const villagerLoader = new GLTFLoader();
+  villagerLoader.load(
+    "assets/villager_plains_1.glb",
+    (gltf) => {
+      const villager = gltf.scene;
+      villager.position.set(-10, 4, -10); // Adjust the position as needed
+      villager.scale.set(0.01, 0.01, 0.01); // Adjust the scale as needed
+      scene.add(villager);
+    },
+    undefined,
+    (error) => {
+      console.error(error);
+    }
+  );
 
-    return { cube, sphere, sphereMaterial, auroraShaderMaterial };
+  // Add Aurora Borealis shader
+  const auroraShaderMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+      iTime: { value: 0 },
+      iChannel0: {
+        value: textureLoader.load("https://i.imgur.com/cUHldcm.png"),
+      },
+      iChannel1: {
+        value: textureLoader.load("https://i.imgur.com/JNF8Bqf.jpg"),
+      },
+    },
+    vertexShader: vertexShader,
+    fragmentShader: fragmentShader,
+    wireframe: false,
+  });
+
+  const planeGeometry = new THREE.PlaneGeometry(200, 100);
+  const plane = new THREE.Mesh(planeGeometry, auroraShaderMaterial);
+  plane.position.set(0, 50, -50); // Position the plane in the sky
+  scene.add(plane);
+
+  return { cube, sphere, sphereMaterial, auroraShaderMaterial };
 }
+// ...existing code...
 
-export function animate(renderer, scene, camera, controls, cube, sphere, sphereMaterial, auroraShaderMaterial) {
-    requestAnimationFrame(() => animate(renderer, scene, camera, controls, cube, sphere, sphereMaterial, auroraShaderMaterial));
+export function animate(
+  renderer,
+  scene,
+  camera,
+  controls,
+  cube,
+  sphere,
+  sphereMaterial,
+  auroraShaderMaterial
+) {
+  requestAnimationFrame(() =>
+    animate(
+      renderer,
+      scene,
+      camera,
+      controls,
+      cube,
+      sphere,
+      sphereMaterial,
+      auroraShaderMaterial
+    )
+  );
 
-    // Update camera position based on movement state
-    const moveSpeed = 0.2;
+  // Update camera position based on movement state
+  const moveSpeed = 0.2;
+  if (controls && controls.moveState) {
     if (controls.moveState.forward) controls.moveForward(moveSpeed);
     if (controls.moveState.backward) controls.moveForward(-moveSpeed);
     if (controls.moveState.left) controls.moveRight(-moveSpeed);
     if (controls.moveState.right) controls.moveRight(moveSpeed);
+  }
 
-    // Update shader uniforms
+  // Update shader uniforms
+  if (sphereMaterial && sphereMaterial.uniforms) {
     sphereMaterial.uniforms.time.value += 0.05;
+  }
+  if (auroraShaderMaterial && auroraShaderMaterial.uniforms) {
     auroraShaderMaterial.uniforms.iTime.value += 0.01;
+  }
 
-    // Rotate the cube
-    if (cube) {
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
-    }
+  // Rotate the cube
+  if (cube) {
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
+  }
 
-    // Animate the sphere (move up and down)
-    if (sphere) {
-        sphere.position.y = 1 + Math.sin(Date.now() * 0.001) * 2;
-    }
+  // Animate the sphere (move up and down)
+  if (sphere) {
+    sphere.position.y = 1 + Math.sin(Date.now() * 0.001) * 2;
+  }
 
-    addHandImage(scene);
-
+  // Ensure controls is defined before calling update
+  if (controls) {
     controls.update();
+  }
+
+  // Ensure renderer is defined before calling render
+  if (renderer) {
     renderer.render(scene, camera);
-}
-
-export function addHandImage(hudScene) {
-    const textureLoader = new THREE.TextureLoader();
-    const handTexture = textureLoader.load('img/hand.png', () => {
-        const aspect = handTexture.image.width / handTexture.image.height;
-        const handGeometry = new THREE.PlaneGeometry(1 * aspect, 1);
-        const handMaterial = new THREE.MeshBasicMaterial({ map: handTexture, transparent: true });
-        const handMesh = new THREE.Mesh(handGeometry, handMaterial);
-
-        // Position the hand in the right corner of the screen
-        handMesh.position.set(0.8, -0.8, 0); // Adjust these values as needed
-        handMesh.scale.set(0.2, 0.2, 0.2); // Adjust the scale as needed
-
-        hudScene.add(handMesh);
-    });
+  }
 }
