@@ -5,14 +5,44 @@ import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
 import { vertexShader, fragmentShader } from "../shaders/sphereShader.js";
 import { vertexShader1, fragmentShader1 } from "../shaders/shader.js";
+import { createSkybox } from './skybox.js'; // Assuming skybox.js exports a createSkybox function
 
 export function addObjects(scene) {
   const textureLoader = new THREE.TextureLoader();
 
+  // Invoke the skybox setup function to add a skybox to the scene
+
+  const skybox = createSkybox(scene);
+  scene.add(skybox);
+  
   // Create wooden boxes
   const boxGeometry = new THREE.BoxGeometry(3, 3, 3);
   const woodTexture = textureLoader.load("textures/wood_plank.jpeg");
   const woodMaterial = new THREE.MeshStandardMaterial({ map: woodTexture });
+
+  //Create House:
+  // Load the house model
+const houseLoader = new GLTFLoader();
+houseLoader.load("assets/minecraft_house.glb", (gltf) => {
+  const house = gltf.scene;
+  house.position.set(0, -4, -35); // Set the position of the house in the scene
+  house.scale.set(5, 5, 5); // Scale the house to fit the scene
+  house.rotateY(Math.PI); // Rotate the house to face the camera
+  house.castShadow = true;
+  house.receiveShadow = true;
+  scene.add(house);
+});
+
+const aliscatLoader = new GLTFLoader();
+aliscatLoader.load("assets/oiiaioooooiai_cat.glb", (gltf) => {
+  const aliscat = gltf.scene;
+  aliscat.position.set(-1.5, 0, -53);
+  aliscat.scale.set(10, 10, 10);
+  aliscat.castShadow = true;
+  aliscat.receiveShadow = true;
+  scene.add(aliscat);
+});
+
 
   // Create boxes at positions
   const boxPositions = [-40, -30, -20, -10, 0, 10, 20, 30].map((x) => ({
@@ -110,7 +140,7 @@ export function addObjects(scene) {
     const chest = gltf.scene;
     chest.position.set(20, 5, -25);
     chest.scale.set(0.015, 0.015, 0.015);
-    chest.rotateY(-Math.PI/2);
+    chest.rotateY(-Math.PI / 2);
     chest.castShadow = true;
     chest.receiveShadow = true;
     scene.add(chest);
@@ -125,57 +155,94 @@ export function addObjects(scene) {
     tree.receiveShadow = true;
     scene.add(tree);
   });
-//add zombie
-const zombieLoader = new GLTFLoader();
-zombieLoader.load("assets/minecraft_zombie.glb", (gltf) => {
-  const zombie = gltf.scene;
-  zombie.position.set(-40, 3, -25);  // Make sure this position is visible in your scene
-  zombie.scale.set(2, 2, 2);
-  zombie.rotateY(Math.PI)       // Adjust scale if needed
-  zombie.castShadow = true;
-  zombie.receiveShadow = true;
 
-  // Directly add the zombie model to the scene
-  scene.add(zombie);
-});
-
-  // Add signs
-  const signLoader = new GLTFLoader();
-  boxPositions.forEach((pos, index) => {
-    signLoader.load("assets/minecraft_sign.glb", (gltf) => {
-      const sign = gltf.scene;
-      sign.position.set(pos.x + 2, pos.y - 1, pos.z + 5);
-      sign.scale.set(6, 6, 6);
-      sign.rotation.y = Math.PI;
-      sign.castShadow = true;
-      sign.receiveShadow = true;
-      scene.add(sign);
-
-      const fontLoader = new FontLoader();
-      fontLoader.load("https://threejs.org/examples/fonts/helvetiker_regular.typeface.json", (font) => {
-        const labels = ["Cube", "Sphere", "Cat", "Villager", "Chest"];
-        const textGeometry = new TextGeometry(labels[index], {
-          font: font,
-          size: 0.03,
-          height: 0.01,
-        });
-        const textMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
-        const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-        textMesh.position.set(0, 0.5, 0.25);
-        sign.add(textMesh);
-      });
-    });
+  // Add zombie
+  const zombieLoader = new GLTFLoader();
+  zombieLoader.load("assets/minecraft_zombie.glb", (gltf) => {
+    const zombie = gltf.scene;
+    zombie.position.set(-40, 3, -25);  // Make sure this position is visible in your scene
+    zombie.scale.set(2, 2, 2);
+    zombie.rotateY(Math.PI);       // Adjust scale if needed
+    zombie.castShadow = true;
+    zombie.receiveShadow = true;
+    scene.add(zombie);
   });
 
-  // Add lights
-  const sunlight = new THREE.DirectionalLight(0xffffff, 1);
-  sunlight.position.set(5, 10, 7.5);
-  sunlight.castShadow = true;
-  sunlight.shadow.mapSize.width = 2048;
-  scene.add(sunlight);
+// Add signs
+const signLoader = new GLTFLoader();
+boxPositions.forEach((pos, index) => {
+  signLoader.load("assets/minecraft_sign.glb", (gltf) => {
+    const sign = gltf.scene;
+    sign.position.set(pos.x + 2, pos.y - 1, pos.z + 5);
+    sign.scale.set(6, 6, 6);
+    sign.rotation.y = Math.PI;
+    sign.castShadow = true;
+    sign.receiveShadow = true;
+    scene.add(sign);
 
-  const ambientLight = new THREE.AmbientLight(0x404040);
-  scene.add(ambientLight);
+    // Add the predefined text to the sign
+    const labels = ["Zombies can bite you be carefull!", "Poisonuos Mushroom  do not eat", "Minecrafts first    block that was ever coded", "Orb wow it is magic", "Ali's cat that was   murder tragicaly by  ozgur ", "Villager trade lots of emeralds for potatos", "Chest store your valuables inside", "Tree the make Oxygen by Photosynthesis"];
+    const label = labels[index]; // Use predefined labels based on index
+    addTextToSign(sign, label); // Call the function to add text to the sign
+  });
+});
+
+// Add lights with dimmer intensities
+const sunlight = new THREE.DirectionalLight(0xffffff, 0.6);
+sunlight.position.set(5, 10, 7.5);
+sunlight.castShadow = true;
+sunlight.shadow.mapSize.width = 2048;
+scene.add(sunlight);
+
+// Add yellow spotlight positioned inside house model
+const spotlight = new THREE.SpotLight(0xffff00, 20); // Increased intensity from 2 to 10
+spotlight.position.set(-1, 10.2, -42);
+spotlight.target.position.set(0, 5, 15);
+spotlight.angle = Math.PI / 2;
+spotlight.penumbra = 0.2;
+spotlight.decay = 0.7; // Lower decay for more uniform lighting
+spotlight.distance = 50; // Increased distance for a wider area of effect
+
+// Enable and configure shadows for the spotlight
+spotlight.castShadow = true;
+spotlight.shadow.mapSize.width = 1024;
+spotlight.shadow.mapSize.height = 1024;
+spotlight.shadow.camera.near = 1;
+spotlight.shadow.camera.far = 200; // Increased far value for greater shadow distance
+spotlight.shadow.focus = 1;
+
+// Add spotlight target
+const spotlightTarget = new THREE.Object3D();
+spotlightTarget.position.copy(spotlight.target.position);
+//scene.add(spotlightTarget);
+spotlight.target = spotlightTarget;
+
+// Add helpers to visualize the spotlight
+const spotLightHelper = new THREE.SpotLightHelper(spotlight);
+//scene.add(spotLightHelper);
+
+
+// Add a box helper to mark the spotlight position
+const geometryHelper = new THREE.BoxGeometry(1, 1, 1);
+const materialHelper = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Red box
+const spotlightPositionHelper = new THREE.Mesh(geometryHelper, materialHelper);
+spotlightPositionHelper.position.copy(spotlight.position);
+//scene.add(spotlightPositionHelper);
+
+// Add helper to visualize target position
+const targetHelper = new THREE.Mesh(
+    new THREE.BoxGeometry(0.5, 0.5, 0.5),
+    new THREE.MeshBasicMaterial({ color: 0x00ff00 }) // Green box
+);
+targetHelper.position.copy(spotlightTarget.position);
+//scene.add(targetHelper);
+
+scene.add(spotlight);
+
+// Add dimmer ambient light
+// Add ambient light to ensure the skybox is visible
+const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+scene.add(ambientLight);
 
   // Add floor
   const blockSize = 3;
@@ -197,6 +264,46 @@ zombieLoader.load("assets/minecraft_zombie.glb", (gltf) => {
   // Return objects for animation
   return { cube, sphere, sphere2, sphereMaterial, sphereMaterial2 };
 }
+function addTextToSign(sign, label, startX = 0.45, startY = 0.5, startZ = 0.237) {
+  const fontLoader = new FontLoader();
+  fontLoader.load("https://threejs.org/examples/fonts/helvetiker_regular.typeface.json", (font) => {
+    // Split long labels into up to 4 lines if needed
+    const maxLength = 20; // Max characters per line
+    let lines = [];
+    while (label.length > maxLength) {
+      let line = label.slice(0, maxLength);
+      lines.push(line);
+      label = label.slice(maxLength);
+    }
+    lines.push(label); // Add the remaining text as the last line
+
+    // Create text geometry for each line
+    const textMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+    const textMeshes = lines.map((line, index) => {
+      const textGeometry = new TextGeometry(line, {
+        font: font,
+        size: 0.03, // Reduced size for smaller text
+        height: 0.02, // Smaller height
+      });
+
+      const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+      // Adjust position to fit within the sign, with some vertical offset
+      const offsetY = 0.1; // Vertical offset between lines
+      textMesh.position.set(startX, startY - index * offsetY, startZ); // Position text based on input values
+      textMesh.rotation.y = Math.PI; // Rotate the text to face the correct direction
+
+      return textMesh;
+    });
+
+    // Add the text meshes to the sign
+    textMeshes.forEach((textMesh) => {
+      sign.add(textMesh);
+    });
+  });
+}
+
+
+
 
 export function animate(renderer, scene, camera, controls, cube, sphere, sphere2, sphereMaterial, sphereMaterial2) {
   requestAnimationFrame(() => animate(renderer, scene, camera, controls, cube, sphere, sphere2, sphereMaterial, sphereMaterial2));

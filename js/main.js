@@ -13,18 +13,30 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Optional: softer shadows
 const camera = initCamera();
 
+// Setup audio
 setupAudio(camera);
+
 // Initialize controls
 const controls = initControls(camera, renderer.domElement);
 
-// Add objects to the scene
-const { cube, sphere, sphereMaterial, auroraShaderMaterial } = addObjects(scene);
+// Add objects to the scene - now including sphere2 and its material
+const { cube, sphere, sphere2, sphereMaterial, sphereMaterial2 } = addObjects(scene);
 
 // Add event listeners
 addEventListeners(camera, renderer, controls);
 
-// Start animation loop
-animate(renderer, scene, camera, controls, cube, sphere, sphereMaterial, auroraShaderMaterial);
+// Start animation loop - now passing sphere2 and its material
+animate(
+    renderer,
+    scene,
+    camera,
+    controls,
+    cube,
+    sphere,
+    sphere2,
+    sphereMaterial,
+    sphereMaterial2
+);
 
 // Setup play button
 setupPlayButton(controls); // Pass controls to setupPlayButton
