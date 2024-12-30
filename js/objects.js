@@ -226,6 +226,42 @@ scene.add(spotLight4.target);
 // renderer.shadowMap.enabled = true;
 // renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Optional: softer shadows
 
+// Add this function to create and add the rotating text
+function addRotatingText(scene) {
+  const fontLoader = new FontLoader();
+  fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+    const textGeometry = new TextGeometry('Hello', {
+      font: font,
+      size: 5,
+      height: 1,
+    });
+    const textMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+    textMesh.position.set(0, 10, 0); // Adjust the position as needed
+    scene.add(textMesh);
+
+    // Add the text mesh to the scene
+    scene.add(textMesh);
+
+    // Animate the text with more weird animations
+    function animateText() {
+      requestAnimationFrame(animateText);
+      textMesh.rotation.y += 0.01; // Rotate
+      textMesh.rotation.x += 0.005; // Rotate on another axis
+      textMesh.scale.x = 1 + 0.3 * Math.sin(Date.now() * 0.005); // Scale
+      textMesh.scale.y = 1 + 0.3 * Math.cos(Date.now() * 0.005); // Scale
+      textMesh.position.y = 10 + 5 * Math.sin(Date.now() * 0.002); // Move up and down
+
+      // Change color over time
+      const time = Date.now() * 0.001;
+      textMaterial.color.setHSL(Math.sin(time * 0.1), 0.5, 0.5);
+    }
+    animateText();
+  });
+}
+
+
+addRotatingText(scene);
 
 
   // Load the 3D model
