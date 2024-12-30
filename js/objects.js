@@ -272,6 +272,55 @@ export function addObjects(scene) {
     }
   );
 
+  const catLoader = new GLTFLoader();
+  catLoader.load(
+    "assets/minecraft_cat.glb",
+    (gltf) => {
+      const cat = gltf.scene;
+      cat.position.set(5, 3, 10); // Adjust the position as needed
+      cat.scale.set(6, 6, 6); // Adjust the scale as needed
+      scene.add(cat);
+    },
+    undefined,
+    (error) => {
+      console.error(error);
+    }
+  );
+
+  //assets/minecraft_chest.glb
+  const chestLoader = new GLTFLoader();
+  chestLoader.load(
+    "assets/minecraft_chest.glb",
+    (gltf) => {
+      const chest = gltf.scene;
+      chest.position.set(-10, 1.4, 10); // Adjust the position as needed
+      chest.scale.set(0.015, 0.015, 0.015); // Adjust the scale as needed
+      scene.add(chest);
+    },
+    undefined,
+    (error) => {
+      console.error(error);
+    }
+  );
+
+  //assets/minecraft_tree.glb
+  const treeLoader = new GLTFLoader();
+  treeLoader.load(
+    "assets/minecraft_tree.glb",
+    (gltf) => {
+      const tree = gltf.scene;
+      tree.position.set(10, 2, 10); // Adjust the position as needed
+      tree.scale.set(10, 10, 10); // Adjust the scale as needed
+      scene.add(tree);
+    },
+    undefined,
+    (error) => {
+      console.error(error);
+    }
+  );
+
+
+
   // Add Aurora Borealis shader
   const auroraShaderMaterial = new THREE.ShaderMaterial({
     uniforms: {
