@@ -11,7 +11,7 @@ body {
   overflow: hidden;
   font-family: "Comic Sans MS", "Comic Sans", cursive;
   background-color: #121212;
-  cursor: url("http://www.rw-designer.com/cursor-extern.php?id=173843") 16 16, auto;
+  cursor: url("https://www.rw-designer.com/cursor-extern.php?id=173843") 16 16, auto;
   animation: backgroundColorChange 10s infinite alternate;
 }
 
