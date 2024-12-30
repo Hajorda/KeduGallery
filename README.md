@@ -253,3 +253,5 @@ main.js
 - Special thanks to Tolga Hoca
 
 This project demonstrates the use of Three.js for creating interactive 3D graphics and includes various features such as custom shaders, 3D models, and user interaction.
+
+![:hajorda](https://count.getloli.com/get/@:hajorda)
