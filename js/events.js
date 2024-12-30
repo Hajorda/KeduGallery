@@ -1,21 +1,23 @@
 import * as THREE from 'three';
 import { setupAudio, startAudio } from "./music.js";
+let godMode = false;
+let keyBuffer = '';
+
 export function addEventListeners(camera, renderer, controls) {
-    // Ensure moveState is defined on controls
     controls.moveState = {
         forward: false,
         backward: false,
         left: false,
-        right: false
+        right: false,
+        up: false,
+        down: false
     };
 
-    // Load walking sound
     const audioLoader = new THREE.AudioLoader();
     const listener = new THREE.AudioListener();
     camera.add(listener);
     const walkingSound = new THREE.Audio(listener);
     
-    // Add event listener to start audio when the button is clicked
     document.getElementById('start_audio').addEventListener('click', startAudio);
 
     audioLoader.load('assets/walking.mp3', function(buffer) {
@@ -43,6 +45,17 @@ export function addEventListeners(camera, renderer, controls) {
     });
 
     window.addEventListener('keydown', (event) => {
+        if (godMode) {
+            switch (event.key) {
+                case ' ':
+                    controls.moveState.up = true;
+                    break;
+                case 'Shift':
+                    controls.moveState.down = true;
+                    break;
+            }
+        }
+
         switch (event.key) {
             case 'w':
                 controls.moveState.forward = true;
@@ -64,6 +77,17 @@ export function addEventListeners(camera, renderer, controls) {
     });
 
     window.addEventListener('keyup', (event) => {
+        if (godMode) {
+            switch (event.key) {
+                case ' ':
+                    controls.moveState.up = false;
+                    break;
+                case 'Shift':
+                    controls.moveState.down = false;
+                    break;
+            }
+        }
+
         switch (event.key) {
             case 'w':
                 controls.moveState.forward = false;
@@ -79,9 +103,34 @@ export function addEventListeners(camera, renderer, controls) {
                 break;
         }
 
-        // Stop walking sound if no movement keys are pressed
         if (!controls.moveState.forward && !controls.moveState.backward && !controls.moveState.left && !controls.moveState.right) {
             stopWalkingSound();
+        }
+    });
+
+    window.addEventListener('keypress', (event) => {
+        keyBuffer += event.key;
+        if (keyBuffer.length > 7) {
+            keyBuffer = keyBuffer.slice(-7);
+        }
+
+        if (keyBuffer.includes('godmode')) {
+            godMode = !godMode;
+            const godModeMessage = document.getElementById('godmode-message');
+            if (godMode) {
+                godModeMessage.textContent = 'God Mode Activated';
+                godModeMessage.style.display = 'block';
+                setTimeout(() => {
+                    godModeMessage.style.display = 'none';
+                }, 2000); // Hide the message after 2 seconds
+            } else {
+                godModeMessage.textContent = 'God Mode Disabled';
+                godModeMessage.style.display = 'block';
+                setTimeout(() => {
+                    godModeMessage.style.display = 'none';
+                }, 2000); // Hide the message after 2 seconds
+            }
+            console.log(`God mode ${godMode ? 'enabled' : 'disabled'}`);
         }
     });
 }
