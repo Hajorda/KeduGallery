@@ -1,7 +1,8 @@
 import * as THREE from 'three';
-import { setupAudio, startAudio } from "./music.js";
+import { setupAudio, startAudio,stopAudio } from "./music.js";
 let godMode = false;
 let keyBuffer = '';
+let isPaused = false;
 
 export function addEventListeners(camera, renderer, controls) {
     controls.moveState = {
@@ -19,6 +20,13 @@ export function addEventListeners(camera, renderer, controls) {
     const walkingSound = new THREE.Audio(listener);
     
     document.getElementById('start_audio').addEventListener('click', startAudio);
+    // stop music button
+    document.getElementById('stop_audio').addEventListener('click', () => {
+        stopAudio();
+        console.log('Music stopped');
+    }
+    );
+
 
     audioLoader.load('assets/walking.mp3', function(buffer) {
         walkingSound.setBuffer(buffer);
