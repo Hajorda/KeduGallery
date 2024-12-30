@@ -226,11 +226,11 @@ scene.add(spotLight4.target);
 // renderer.shadowMap.enabled = true;
 // renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Optional: softer shadows
 
-// Add this function to create and add the rotating text
+
 function addRotatingText(scene) {
   const fontLoader = new FontLoader();
   fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
-    const textGeometry = new TextGeometry('Hello', {
+    const textGeometry = new TextGeometry('Tolga', {
       font: font,
       size: 5,
       height: 1,
