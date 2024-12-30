@@ -4,43 +4,7 @@ import { createBlock } from "./builder";
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { vertexShader, fragmentShader } from '../shaders/sphereShader.js'; // Import shaders
-
-// Define the vertex and fragment shaders
-const vertexShader1 = `
-    varying vec2 vUv;
-    void main() {
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        vUv = uv;
-    }
-`;
-
-const fragmentShader1 = `
-    uniform float iTime;
-    uniform sampler2D iChannel0;
-    uniform sampler2D iChannel1;
-    varying vec2 vUv;
-    #define TAU 6.283185307179586476925286766559
-    void main() {
-        vec2 uv = vUv;
-        float o = texture2D(iChannel1, uv * 0.25 + vec2(0.0, iTime * 0.025)).r;
-        float d = (texture2D(iChannel0, uv * 0.25 - vec2(0.0, iTime * 0.02 + o * 0.02)).r * 2.0 - 1.0);
-        float v = uv.y + d * 0.1;
-        v = 1.0 - abs(v * 2.0 - 1.0);
-        v = pow(v, 2.0 + sin((iTime * 0.2 + d * 0.25) * TAU) * 0.5);
-        vec3 color = vec3(0.0);
-        float x = (1.0 - uv.x * 0.75);
-        float y = 1.0 - abs(uv.y * 2.0 - 1.0);
-        color += vec3(x * 0.5, y, x) * v;
-        vec2 seed = uv;
-        vec2 r;
-        r.x = fract(sin((seed.x * 12.9898) + (seed.y * 78.2330)) * 43758.5453);
-        r.y = fract(sin((seed.x * 53.7842) + (seed.y * 47.5134)) * 43758.5453);
-        float s = mix(r.x, (sin((iTime * 2.5 + 60.0) * r.y) * 0.5 + 0.5) * ((r.y * r.y) * (r.y * r.y)), 0.04); 
-        color += pow(s, 70.0) * (1.0 - v);
-        gl_FragColor.rgb = color;
-        gl_FragColor.a = 1.0;
-    }
-`;
+import {vertexShader1, fragmentShader1} from '../shaders/shader.js'
 
 export function addObjects(scene) {
   // Create a cube
@@ -78,21 +42,12 @@ export function addObjects(scene) {
   sphere2.scale.set(2, 2, 2); // Scale the sphere to be larger
   scene.add(sphere2);
 
-
   // Load the grass texture
   const textureLoader = new THREE.TextureLoader();
   const grassTexture = textureLoader.load("textures/grass.jpg");
   grassTexture.wrapS = THREE.RepeatWrapping;
   grassTexture.wrapT = THREE.RepeatWrapping;
   grassTexture.repeat.set(10, 10);
-
-  // Remove the existing floor creation code
-  // const floorGeometry = new THREE.PlaneGeometry(500, 500);
-  // const floorMaterial = new THREE.MeshStandardMaterial({ map: grassTexture });
-  // const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-  // floor.rotation.x = -Math.PI / 2; // Rotate the floor to be horizontal
-  // floor.position.y = -1; // Position the floor below the cube
-  // scene.add(floor);
 
   // Create the floor using blocks
   const blockSize = 3;
@@ -106,6 +61,7 @@ export function addObjects(scene) {
         y: -blockSize / 2,
         z: z * blockSize,
       });
+      block.receiveShadow = true; // Ensure the floor receives shadows  
       scene.add(block);
     }
   }
@@ -173,15 +129,80 @@ export function addObjects(scene) {
     }
   }
 
-  // Add a directional light to simulate sunlight
-  const sunlight = new THREE.DirectionalLight(0xffffff, 1);
-  sunlight.position.set(5, 10, 7.5);
-  sunlight.castShadow = true; // Enable shadows
-  scene.add(sunlight);
+// Add a directional light to simulate sunlight
+const sunlight = new THREE.DirectionalLight(0xffffff, 1);
+sunlight.position.set(5, 10, 7.5);
+sunlight.castShadow = true; // Enable shadows
+scene.add(sunlight);
 
-  // Add ambient light to illuminate the scene
-  const ambientLight = new THREE.AmbientLight(0x404040); // Soft white light
-  scene.add(ambientLight);
+// Add ambient light to illuminate the scene
+const ambientLight = new THREE.AmbientLight(0x404040); // Soft white light
+scene.add(ambientLight);
+
+// Add spotlights to the walls
+const spotLight1 = new THREE.SpotLight(0xfffff);
+spotLight1.position.set(0, 5, -3);
+spotLight1.target.position.set(0, 3, -8);
+spotLight1.angle = Math.PI / 6;
+spotLight1.penumbra = 0.5;
+spotLight1.castShadow = true;
+scene.add(spotLight1);
+scene.add(spotLight1.target);
+
+const spotLight = new THREE.SpotLight(0xff0000); // Red color
+spotLight.position.set(0, 10, 0); // Position the spotlight above the center
+spotLight.target.position.set(0, 0, 0); // Target the center of the scene
+spotLight.angle = Math.PI / 4; // Wider angle for more coverage
+spotLight.penumbra = 0.5;
+spotLight.intensity = 5; // Increase intensity
+spotLight.castShadow = true;
+scene.add(spotLight);
+scene.add(spotLight.target);
+
+const spotLight2 = new THREE.SpotLight(0xffffff);
+spotLight2.position.set(0, 5, 3);
+spotLight2.target.position.set(0, 3, 8);
+spotLight2.angle = Math.PI / 6;
+spotLight2.penumbra = 0.5;
+spotLight2.castShadow = true;
+scene.add(spotLight2);
+scene.add(spotLight2.target);
+
+const spotLight3 = new THREE.SpotLight(0xffffff);
+spotLight3.position.set(-3, 5, 0);
+spotLight3.target.position.set(-8, 3, 0);
+spotLight3.angle = Math.PI / 6;
+spotLight3.penumbra = 0.5;
+spotLight3.castShadow = true;
+scene.add(spotLight3);
+scene.add(spotLight3.target);
+
+const spotLight4 = new THREE.SpotLight(0xffffff);
+spotLight4.position.set(3, 5, 0);
+spotLight4.target.position.set(8, 3, 0);
+spotLight4.angle = Math.PI / 6;
+spotLight4.penumbra = 0.5;
+spotLight4.castShadow = true;
+scene.add(spotLight4);
+scene.add(spotLight4.target);
+
+// Add a spotlight helper to visualize the spotlight
+const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+scene.add(spotLightHelper);
+const spotLightHelper1 = new THREE.SpotLightHelper(spotLight1);
+scene.add(spotLightHelper1);
+const spotLightHelper2 = new THREE.SpotLightHelper(spotLight2);
+scene.add(spotLightHelper2);
+const spotLightHelper3 = new THREE.SpotLightHelper(spotLight3);
+scene.add(spotLightHelper3);
+const spotLightHelper4 = new THREE.SpotLightHelper(spotLight4);
+scene.add(spotLightHelper4);
+
+// // Ensure the renderer has shadows enabled
+// renderer.shadowMap.enabled = true;
+// renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Optional: softer shadows
+
+
 
   // Load the 3D model
   const loader = new GLTFLoader();
@@ -334,8 +355,6 @@ export function addObjects(scene) {
     }
   );
 
-
-
   // Add Aurora Borealis shader
   const auroraShaderMaterial = new THREE.ShaderMaterial({
     uniforms: {
@@ -352,14 +371,8 @@ export function addObjects(scene) {
     wireframe: false,
   });
 
-  // const planeGeometry = new THREE.PlaneGeometry(200, 100);
-  // const plane = new THREE.Mesh(planeGeometry, auroraShaderMaterial);
-  // plane.position.set(0, 50, -50); // Position the plane in the sky
-  // scene.add(plane);
-
   return { cube, sphere, sphereMaterial, auroraShaderMaterial };
 }
-// ...existing code...
 
 export function animate(
   renderer,

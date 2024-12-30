@@ -24,6 +24,10 @@ export function createBlock(width, height, depth, texturePath, position) {
     // Set the position of the block
     block.position.set(position.x, position.y, position.z);
 
+    // Enable the block to cast and receive shadows
+    block.castShadow = true;
+    block.receiveShadow = true;
+
     // Return the block mesh
     return block;
 }

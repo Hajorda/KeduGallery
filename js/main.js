@@ -4,10 +4,13 @@ import { addObjects, animate } from './objects.js';
 import { addEventListeners } from './events.js';
 import { setupPlayButton, hideMenu, showMenu, startExperience } from './menu.js';
 import { setupAudio, startAudio } from "./music.js";
+import * as THREE from 'three';
 
 // Initialize scene, renderer, and camera
 const scene = initScene();
 const renderer = initRenderer();
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Optional: softer shadows
 const camera = initCamera();
 
 setupAudio(camera);
