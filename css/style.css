@@ -41,13 +41,13 @@ p, img, div, canvas {
   display: none;
 }
 
-
 #menu {
-  width: 40em;
+  width: 90%;
+  max-width: 40em;
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(360deg);
+  transform: translate(-50%, -50%);
   text-align: center;
   font-size: 1.5em;
   border-radius: 1em;
@@ -55,6 +55,12 @@ p, img, div, canvas {
   overflow: hidden;
   animation: spin 5s linear infinite;
   backdrop-filter: blur(10px); /* Add blur effect */
+}
+
+@media (max-width: 600px) {
+  #menu {
+    font-size: 1em;
+  }
 }
 
 #menu .title {
@@ -150,7 +156,6 @@ p, img, div, canvas {
   cursor: pointer;
   transform: scale(1.1);
 }
-
 
 canvas {
   width: 100%;
