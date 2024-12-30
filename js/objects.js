@@ -47,6 +47,7 @@ export function addObjects(scene) {
   const geometry = new THREE.BoxGeometry();
   const material = new THREE.MeshStandardMaterial({ color: 0xff0000 }); // Red color
   const cube = new THREE.Mesh(geometry, material);
+  cube.position.set(-10, 3, -5); // Position the cube at the origin
   scene.add(cube);
 
   // Create a sphere with custom shaders
