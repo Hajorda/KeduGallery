@@ -2,6 +2,7 @@
 
 This project is a school project for the CMPE360 Graphics class. It is an interactive 3D art gallery built using Three.js. The gallery allows users to explore various artworks and learn about their history and significance. The project includes features such as movement controls, audio playback, and special modes like "God Mode".
 
+ [![wakatime](https://wakatime.com/badge/user/6d0dba45-3724-453c-9545-00584b9996fa/project/13c34eaf-a62d-40fc-9762-5c344e723f17.svg)](https://wakatime.com/badge/user/6d0dba45-3724-453c-9545-00584b9996fa/project/13c34eaf-a62d-40fc-9762-5c344e723f17)
  
 ![image](https://github.com/user-attachments/assets/6f0d1b7b-71ab-484b-acbc-6c0912ba7563)
 
