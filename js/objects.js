@@ -2,6 +2,9 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { createBlock } from "./builder";
 import { add } from "three/src/nodes/TSL.js";
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+
 
 // Define the vertex and fragment shaders
 const vertexShader = `
@@ -218,18 +221,39 @@ export function addObjects(scene) {
   const signLoader = new GLTFLoader();
   const gltfPath = "assets/minecraft_sign.glb";
 
+  const signX = 0;
+  const signY = 0;
+  const signZ = 0;
+
   signLoader.load(
     gltfPath,
     function (gltf) {
       const sign = gltf.scene;
-      sign.position.set(0, -1, 0); // Adjust the position as needed
+      sign.position.set(signX,signY,signZ); // Adjust the position as needed
       sign.scale.set(8, 8, 8); // Adjust the scale as needed
       scene.add(sign);
+  
+      // Load font and create text
+      const fontLoader = new FontLoader();
+      fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+        const textGeometry = new TextGeometry('Hello World', {
+          font: font,
+          size: 0.03,
+          height: 0.03,
+        });
+        const textMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+        const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+        textMesh.position.set(signX+0.13, signY+0.5, signZ +0.25 ); // Adjust the position as needed
+        sign.add(textMesh);
+      }, undefined, function (error) {
+        console.error("An error happened while loading the font", error);
+      });
+  
       animate();
     },
     undefined,
     function (error) {
-      console.error("An error happened", error);
+      console.error("An error happened while loading the sign", error);
     }
   );
 
